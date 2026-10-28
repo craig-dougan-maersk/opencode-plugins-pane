@@ -22,6 +22,6 @@ jobs:
       # Check before rebuilding: otherwise a missing/stale committed dist is hidden.
     - run: npm run build:check
     - run: npm run test:coverage
-    - run: npm run build
+    - run: npm run compile
     - run: git diff --exit-code -- dist/tui.js
     - run: node --check dist/tui.js

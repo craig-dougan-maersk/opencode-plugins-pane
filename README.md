@@ -13,7 +13,7 @@ endings in `dist/tui.js`; the freshness check compares exact bytes.
 ```sh
 npm ci --ignore-scripts
 npm run typecheck
-npm run build
+npm run compile
 npm test
 npm run build:check
 node --check dist/tui.js
@@ -25,10 +25,18 @@ OpenCode, Solid and OpenTUI imports stay external; this is not a React build
 and does not bundle a second renderer. TypeScript only checks source types.
 If more source modules are added, extend the build to emit those modules too.
 
-Commit `dist/tui.js` alongside source changes. OpenCode 2.2.0 installs packages
-with lifecycle scripts disabled, so Git consumers cannot rely on `prepare`
-to compile TSX. `prepack` rebuilds for maintainer-side npm packaging. CI checks
-the committed output before rebuilding and tests a scripts-disabled tarball.
+Commit `dist/tui.js` alongside source changes. The embedded installer disables
+lifecycle scripts, but Git fetching can still attempt a nested npm install
+when a package has `build`, `prepack`, `prepare`, install hooks or workspaces.
+Use `compile` explicitly; do not add those preparation triggers. There is no
+automatic packaging hook: run the checks above before `npm pack`. CI checks
+committed output before compiling, a scripts-disabled tarball and actual signed
+Git packages with an unavailable npm CLI sentinel. The latter proves the
+package can be extracted without launching dependency preparation; it does not
+execute OpenCode or certify host rendering or runtime security.
+
+Git regression tests use pinned development-only `pacote` and Arborist APIs.
+The small signed fixture bundle is documented in `test/fixtures/README.md`.
 
 Configure this TUI-only package in global `cli.json`, using a tested full Git
 revision for reproducibility. It exports `./tui` as `./dist/tui.js`.
