@@ -19,7 +19,7 @@ try {
     const existing = await readFile("dist/tui.js", "utf8");
     if (existing !== output) {
       throw new Error(
-        "dist/tui.js is stale; run npm run build and commit the output",
+        "dist/tui.js is stale; run npm run compile and commit the output",
       );
     }
   } else {

@@ -102,7 +102,7 @@ test("build writes output and rejects stale, missing and invalid source", async 
     validateJavaScript(await readFile(join(directory, "dist/tui.js"), "utf8"));
     run("--check");
     await writeFile(join(directory, "dist/tui.js"), "// stale\n");
-    assert.throws(() => run("--check"), /stale/);
+    assert.throws(() => run("--check"), /stale; run npm run compile/);
     assert.equal(
       await readFile(join(directory, "dist/tui.js"), "utf8"),
       "// stale\n",
